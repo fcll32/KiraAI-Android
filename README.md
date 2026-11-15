@@ -1,17 +1,42 @@
-# KiraAI 手机版
+<div align="center">
 
-Android 版 KiraAI 宿主源码和社区测试包。
+# KiraAI for Android
 
-## 源码
+A community Android host for running KiraAI on ARM64 phones.
 
-[浏览 Android 宿主源码](https://github.com/fcll32/KiraAI-Android/tree/main/android-kira-host)。Release 中的 APK 对应源码提交 [4f67d14ccc28efaecbd76e6e2d48347fe34934bb](https://github.com/fcll32/KiraAI-Android/commit/4f67d14ccc28efaecbd76e6e2d48347fe34934bb)。仓库还包含宿主运行与架构说明。构建需准备 Android SDK 36、JDK 21、Gradle 9.2.1、Chaquopy 17.2.0，以及说明文档列出的运行时输入。
+[English](README.md) | [简体中文](README.zh.md)
 
-## 下载
+[Android source](https://github.com/fcll32/KiraAI-Android/tree/main/android-kira-host) · [Releases](https://github.com/fcll32/KiraAI-Android/releases) · [KiraAI documentation](https://docs.kira-ai.top)
 
-[GitHub Releases](https://github.com/fcll32/KiraAI-Android/releases)
+</div>
 
-- v1.0.0 ARM64 测试包，Android 9 及以上，首次启动准备环境需要联网。
-- 提供沿用 0.6.3 测试版签名的兼容 APK。SHA-256 338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d
-- 发布页列出的签名信息用于判断能否覆盖安装。签名不一致时先核对设备版本。
+## What it does
 
-上游项目：[KiraAI](https://github.com/xxynet/KiraAI) · [官方文档](https://github.com/KiraAI-Dev/kira-ai-docs)
+- Runs KiraAI locally on an Android phone using a Debian PRoot environment.
+- Provides the KiraAI and NapCat panels from one Android app.
+- Includes backup management, runtime status, and optional local NapCat support.
+
+This is a community test build. The current ARM64 package is version 1.0.0, version code 21, and requires Android 9 or later. First launch needs an internet connection to prepare the runtime.
+
+## Download and install
+
+Download the APK from the [v1.0.0 code 21 release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.0-code21).
+
+The compatibility APK uses the same signing certificate as the older 0.6.3 test build. It can update an installation signed with that certificate. If Android reports a signature mismatch, keep the installed app and check its version and signing certificate before changing it.
+
+APK SHA-256:
+
+338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d
+
+## Source and build
+
+The release APK corresponds to source commit [4f67d14](https://github.com/fcll32/KiraAI-Android/commit/4f67d14ccc28efaecbd76e6e2d48347fe34934bb). The repository contains the Android host, its Python runtime, tests, and architecture notes.
+
+The Android project uses Android SDK 36, JDK 21, Gradle 9.2.1, and Chaquopy 17.2.0. APK preparation also needs the runtime archives and official KiraAI seed described in the project documentation. Local runtime inputs and generated build files are excluded from Git.
+
+The Windows build entry point is android-kira-host/build.ps1. Use -Abi arm64 for an ARM64 phone package. See [ANDROID_LINUX_RUNTIME.md](ANDROID_LINUX_RUNTIME.md) and [ANDROID_HOST_REFACTOR_PLAN.md](ANDROID_HOST_REFACTOR_PLAN.md) for build and validation details.
+
+## Upstream projects
+
+- [KiraAI](https://github.com/xxynet/KiraAI)
+- [KiraAI documentation](https://github.com/KiraAI-Dev/kira-ai-docs)
