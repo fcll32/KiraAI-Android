@@ -1,11 +1,17 @@
 # KiraAI 手机版
 
-这是 KiraAI 的 Android 社区测试版下载仓库。应用在手机上运行 KiraAI，并提供 KiraAI 和 NapCat 面板入口。
+Android 版 KiraAI 宿主源码和社区测试包。
 
-## 下载与安装
+## 源码
 
-- [v1.0.0 ARM64（内部版本号 21）](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.0-code21)
-- 适用于 Android 9 及以上的 ARM64 手机。首次准备环境需要联网。
-- 这个 APK 沿用 0.6.3 测试版的签名，可覆盖安装使用同一签名的旧版。如果设备提示签名不一致，请保留现有安装并先核对版本。
+[浏览 Android 宿主源码](https://github.com/fcll32/KiraAI-Android/tree/96536fc1f13e7cfa0fb0a5016ffd138ea13973a3/android-kira-host)。本版本源码提交为 [96536fc1f13e7cfa0fb0a5016ffd138ea13973a3](https://github.com/fcll32/KiraAI-Android/commit/96536fc1f13e7cfa0fb0a5016ffd138ea13973a3)。仓库还包含宿主运行与架构说明。构建需准备 Android SDK 36、JDK 21、Gradle 9.2.1、Chaquopy 17.2.0，以及说明文档列出的运行时输入。
 
-上游项目：[KiraAI](https://github.com/xxynet/KiraAI) · [KiraAI 文档](https://github.com/KiraAI-Dev/kira-ai-docs)
+## 下载
+
+[GitHub Releases](https://github.com/fcll32/KiraAI-Android/releases)
+
+- v1.0.0 ARM64 测试包，Android 9 及以上，首次启动准备环境需要联网。
+- 提供沿用 0.6.3 测试版签名的兼容 APK。SHA-256 338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d
+- 发布页列出的签名信息用于判断能否覆盖安装。签名不一致时先核对设备版本。
+
+上游项目：[KiraAI](https://github.com/xxynet/KiraAI) · [官方文档](https://github.com/KiraAI-Dev/kira-ai-docs)

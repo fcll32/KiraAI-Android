@@ -1,0 +1,20 @@
+<resources>
+    <style name="HostTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#A2497D</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">#F2E7EE</item>
+        <item name="android:navigationBarColor">#F3E7EF</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#F2E7EE</item>
+    </style>
+    <style name="HostDialogTheme" parent="android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#A2497D</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarColor">#F3E7EF</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+</resources>

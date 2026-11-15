@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN" class="is-intro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KiraAI 新手开始</title>
+<!-- 引导页只读本目录的文件：不联网，不加载任何远程资源。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'">
+<link rel="stylesheet" href="onboarding.css">
+<!-- cursor-swarm.js v1.0.0，ZhengLinLei/cursor-swarm.js 提交 54cc2c2，MIT 许可证见 cursor-swarm-LICENSE.txt，原样未改。 -->
+<script src="cursor-swarm.js"></script>
+</head>
+<body>
+
+<!-- 开场动画：一条心电线、两次心跳、光点汇成星座，再点亮 KiraAI。 -->
+<div id="intro" data-cs-ignore aria-hidden="true">
+  <canvas id="life"></canvas>
+  <div class="intro-mark"><img src="kira.jpg" alt=""></div>
+  <p class="slogan" id="slogan">点亮数字生命灵魂</p>
+  <p class="slogan-en">Light up the digital soul</p>
+</div>
+
+<button id="skip" type="button" data-cs-ignore>跳过<span id="pct"></span></button>
+
+<main id="guide">
+  <header class="top">
+    <img class="top-icon" src="kira.jpg" alt="KiraAI 图标">
+    <div class="top-words">
+      <b>KiraAI</b>
+      <span>新手开始</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="kicker">点亮数字生命灵魂</p>
+    <h1>欢迎来到 KiraAI 手机版</h1>
+    <p class="lede" data-cs="type">KiraAI 是一个以数字生命为中心的 AI 项目，可以连接多种模型和聊天平台。这个应用让它直接运行在你的手机上。</p>
+  </section>
+
+  <h2 class="section-title">四步开始</h2>
+  <ol class="steps">
+    <li class="step tone-rose">
+      <span class="badge">01</span>
+      <div class="step-words">
+        <h3>准备运行环境</h3>
+        <p data-cs="type">首次打开会自动下载并安装运行环境，需要联网，耗时取决于网速。进度显示在首页“运行组件”。</p>
+      </div>
+    </li>
+    <li class="step tone-lilac">
+      <span class="badge">02</span>
+      <div class="step-words">
+        <h3>进入 KiraAI 面板</h3>
+        <p data-cs="type">准备好后点底栏的 KiraAI。登录令牌在“菜单 → KiraAI 首次默认令牌”。</p>
+      </div>
+    </li>
+    <li class="step tone-peach">
+      <span class="badge">03</span>
+      <div class="step-words">
+        <h3>添加模型</h3>
+        <p data-cs="type">在官方面板里填写模型服务商和 API 密钥，KiraAI 就能开始对话。</p>
+      </div>
+    </li>
+    <li class="step tone-rose">
+      <span class="badge">04</span>
+      <div class="step-words">
+        <h3>连接聊天平台（可选）</h3>
+        <p data-cs="type">要接入 QQ，可在首页安装本机 NapCat（xxynet 维护的 fork 版本），或在面板里连接远程 NapCat。</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="tip">
+    <span class="tip-mark" aria-hidden="true"></span>
+    <p data-cs="type">系统可能在后台中断 KiraAI。建议允许后台运行，并关闭本应用的电池优化。</p>
+  </div>
+
+  <div class="actions">
+    <button id="begin" class="primary" type="button">开始使用</button>
+    <button id="battery" class="secondary" type="button">后台与电池设置</button>
+  </div>
+  <p class="note" data-cs="type">之后可以在“菜单 → 新手引导”重新打开这一页。</p>
+</main>
+
+<script src="onboarding.js"></script>
+</body>
+</html>

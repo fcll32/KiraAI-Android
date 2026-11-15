@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "modes": {
+    "chaquopy-3.11-v1": {
+      "description": "Standard Android Python host: Chaquopy 17.2.0 with CPython ABI 3.11 and the prepared PRoot runtime.",
+      "supportedAbis": ["arm64-v8a", "x86_64"],
+      "preparedNativeSource": "build/runtime/assets/host-runtime.json:abis.<selected ABI>.nativeSHA",
+      "hostNativeSources": [
+        {
+          "coordinate": "com.chaquo.python:target:3.11.17-0:<selected ABI>@zip",
+          "requiredLibraries": [
+            "libcrypto_chaquopy.so",
+            "libcrypto_python.so",
+            "libpython3.11.so",
+            "libpython3.so",
+            "libsqlite3_chaquopy.so",
+            "libsqlite3_python.so",
+            "libssl_chaquopy.so",
+            "libssl_python.so"
+          ]
+        },
+        {
+          "coordinate": "com.chaquo.python.runtime:libchaquopy_java:17.2.0:3.11-<selected ABI>@so",
+          "requiredLibraries": ["libchaquopy_java.so"]
+        }
+      ]
+    }
+  }
+}

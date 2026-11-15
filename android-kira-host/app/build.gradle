@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.application'
+    id 'com.chaquo.python'
+}
+def hostAbis = providers.gradleProperty('hostAbis').getOrElse('arm64-v8a,x86_64').split(',') as List
+// Release signing comes from Gradle properties (or ORG_GRADLE_PROJECT_* variables), never from the repository.
+def releaseKeystore = providers.gradleProperty('hostReleaseKeystore').orNull
+if (!hostAbis || !hostAbis.every { it in ['arm64-v8a', 'x86_64'] }) throw new GradleException('Unsupported ABI')
+android {
+    namespace 'top.kira.host'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'top.kira.pythonprobe'
+        minSdk 28
+        targetSdk 35
+        versionCode 21
+        versionName '1.0.0'
+        ndk { abiFilters.addAll(hostAbis) }
+        buildConfigField 'String', 'APK_UPDATE_MANIFEST', '"https://raw.githubusercontent.com/fcll32/kiraai-phone-assistant/main/android-host-update.json"'
+        buildConfigField 'String', 'APK_UPDATE_MIRROR', '"https://gh-proxy.org/"'
+    }
+    signingConfigs {
+        debug {
+            storeFile file('../../.runtime/android-python-probe/android-home/debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+            enableV4Signing = false
+        }
+        if (releaseKeystore) {
+            release {
+                storeFile file(releaseKeystore)
+                storePassword providers.gradleProperty('hostReleaseStorePassword').get()
+                keyAlias providers.gradleProperty('hostReleaseKeyAlias').getOrElse('kiraai-host')
+                keyPassword providers.gradleProperty('hostReleaseKeyPassword').get()
+                enableV1Signing = false
+                enableV2Signing = true
+                enableV3Signing = true
+                enableV4Signing = false
+            }
+        }
+    }
+    buildTypes {
+        release {
+            // Published builds are not debuggable: run-as would expose tokens, chats and QQ login data.
+            debuggable false
+            minifyEnabled false
+            // Packaged images stay byte for byte; the frontend icon is a JPEG named .png and cannot be crunched.
+            crunchPngs false
+            if (releaseKeystore) signingConfig signingConfigs.release
+        }
+    }
+    buildFeatures { buildConfig true }
+    sourceSets.main {
+        res.srcDir '../build/runtime/res'
+        assets.srcDir '../build/runtime/assets'
+        jniLibs.srcDir '../build/runtime/jniLibs'
+        hostAbis.each { abi -> assets.srcDir "../build/runtime/bundled-assets/${abi}" }
+    }
+    androidResources.noCompress += ['payload']
+    packaging.jniLibs {
+        useLegacyPackaging = true
+        keepDebugSymbols += ['**/libproot.so', '**/libprootloader.so', '**/libtalloc.so', '**/libandroid-shmem.so']
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+chaquopy {
+    defaultConfig {
+        version '3.11'
+        buildPython providers.gradleProperty('hostPython').get()
+        pip { install 'certifi==2026.10.23' }
+    }
+    sourceSets { main { srcDir '../runtime' } }
+}
