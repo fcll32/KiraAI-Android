@@ -4,7 +4,7 @@ Android 版 KiraAI 宿主源码和社区测试包。
 
 ## 源码
 
-[浏览 Android 宿主源码](https://github.com/fcll32/KiraAI-Android/tree/96536fc1f13e7cfa0fb0a5016ffd138ea13973a3/android-kira-host)。本版本源码提交为 [96536fc1f13e7cfa0fb0a5016ffd138ea13973a3](https://github.com/fcll32/KiraAI-Android/commit/96536fc1f13e7cfa0fb0a5016ffd138ea13973a3)。仓库还包含宿主运行与架构说明。构建需准备 Android SDK 36、JDK 21、Gradle 9.2.1、Chaquopy 17.2.0，以及说明文档列出的运行时输入。
+[浏览 Android 宿主源码](https://github.com/fcll32/KiraAI-Android/tree/main/android-kira-host)。Release 中的 APK 对应源码提交 [4f67d14ccc28efaecbd76e6e2d48347fe34934bb](https://github.com/fcll32/KiraAI-Android/commit/4f67d14ccc28efaecbd76e6e2d48347fe34934bb)。仓库还包含宿主运行与架构说明。构建需准备 Android SDK 36、JDK 21、Gradle 9.2.1、Chaquopy 17.2.0，以及说明文档列出的运行时输入。
 
 ## 下载
 
