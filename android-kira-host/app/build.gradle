@@ -13,10 +13,10 @@ android {
         applicationId 'top.kira.pythonprobe'
         minSdk 28
         targetSdk 35
-        versionCode 21
-        versionName '1.0.0'
+        versionCode 22
+        versionName '1.0.1'
         ndk { abiFilters.addAll(hostAbis) }
-        buildConfigField 'String', 'APK_UPDATE_MANIFEST', '"https://raw.githubusercontent.com/fcll32/kiraai-phone-assistant/main/android-host-update.json"'
+        buildConfigField 'String', 'APK_UPDATE_MANIFEST', '"https://raw.githubusercontent.com/fcll32/KiraAI-Android/main/android-host-update.json"'
         buildConfigField 'String', 'APK_UPDATE_MIRROR', '"https://gh-proxy.org/"'
     }
     signingConfigs {

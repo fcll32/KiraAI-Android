@@ -16,35 +16,35 @@ A community Android host for running KiraAI on ARM64 phones.
 - Provides the KiraAI and NapCat panels from one Android app.
 - Includes backup management, runtime status, and optional local NapCat support.
 
-The current formal community release is version 1.0.0, version code 21, for ARM64 devices running Android 9 or later. First launch needs an internet connection to prepare the runtime. See [release status](RELEASE_STATUS.md) for validation and remaining work.
+The current formal community release is version 1.0.1, version code 22, for ARM64 devices running Android 9 or later. First launch needs an internet connection to prepare the runtime. See [release status](RELEASE_STATUS.md) for validation and remaining work.
 
 ## Download and install
 
-Download the APK from the [v1.0.0 code 21 release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.0-code21).
+Download the APK from the [v1.0.1 code 22 release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.1-code22).
 
-The compatibility APK uses the same signing certificate as the older 0.6.3 test build. It can update an installation signed with that certificate. If Android reports a signature mismatch, keep the installed app and check its version and signing certificate before changing it.
+This APK retains the signing certificate used by code 21 and the older 0.6.3 compatibility build. It can update an installation signed with that certificate. If Android reports a signature mismatch, keep the installed app and check its version and signing certificate before changing it.
 
 APK SHA-256:
 
 ```text
-338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d
+8a08b09988bcc297243f96c40fa9089d6d5b339507980f7d65dcd8671c8e4f62
 ```
 
 The release also provides `SHA256SUMS.txt` and a runtime source archive. APKs are distributed as Release assets.
 
 ### In-app updates
 
-The published code 21 APK still has an old default update URL which returns 404. In the app's update dialog, replace the **APK update manifest (HTTPS)** field with:
+Version 1.0.1 uses the public update manifest below and migrates the retired official URL saved by earlier versions. Custom update sources are preserved. Code 21 users can update the manifest field manually to discover this release:
 
 ```text
 https://raw.githubusercontent.com/fcll32/KiraAI-Android/main/android-host-update.json
 ```
 
-Check again to save the setting. An installed code 21 build will report that it is already current. You can also download the APK from Releases and select the local APK in the app.
+Check again to save the setting. An installed code 22 build will report that it is already current. You can also download the APK from Releases and select the local APK in the app.
 
 ## Source and build
 
-The release APK corresponds to source commit [4f67d14](https://github.com/fcll32/KiraAI-Android/commit/4f67d14ccc28efaecbd76e6e2d48347fe34934bb). The repository contains the Android host, its Python runtime, tests, and architecture notes.
+The release APK corresponds to [release source tag](https://github.com/fcll32/KiraAI-Android/tree/v1.0.1-code22). The repository contains the Android host, its Python runtime, tests, and architecture notes.
 
 The Android project uses Android SDK 36, JDK 21, Gradle 9.2.1, and Chaquopy 17.2.0. APK preparation also needs the runtime archives and official KiraAI seed described in the project documentation. Local runtime inputs and generated build files are excluded from Git.
 

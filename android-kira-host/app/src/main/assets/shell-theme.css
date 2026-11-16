@@ -45,12 +45,17 @@
   --shell-close: 300ms;
   --shell-item: 220ms;
   --shell-ease: cubic-bezier(.22,1,.36,1);
-  --shell-sky:
+  --shell-sky-light:
     radial-gradient(circle 108px at 90% 11%, #fffbfe99 0 22%, #e6b5d033 53%, transparent 74%),
     radial-gradient(circle 142px at 6% 43%, #ffffff8c 0 21%, #c8b3dd40 55%, transparent 76%),
     radial-gradient(circle 98px at 88% 73%, #fff7fc8c 0 23%, #e1b6d040 56%, transparent 75%),
     radial-gradient(circle 78px at 15% 86%, #fff9fc7c 0 20%, #d6bedf38 55%, transparent 74%),
     linear-gradient(162deg,#f3dfeb 0%,#ebddee 35%,#f9edf3 70%,#f1d5e6 100%);
+  --shell-sky-dark:
+    radial-gradient(circle 112px at 90% 12%, #c683ac38, transparent 73%),
+    radial-gradient(circle 146px at 9% 42%, #b995cf42, transparent 74%),
+    radial-gradient(circle 102px at 85% 78%, #b57d9f33, transparent 74%),
+    linear-gradient(160deg,#392b40 0%,#4a3451 40%,#493347 72%,#56384f 100%);
 }
 :root.dark {
   --color-page: #302635 !important;
@@ -87,15 +92,18 @@
   --color-chat-accent-text: #fff6fc !important;
   --color-chat-accent-border: #a87fa4 !important;
   --color-chat-link: #eabdd9 !important;
-  --shell-sky:
-    radial-gradient(circle 112px at 90% 12%, #c683ac38, transparent 73%),
-    radial-gradient(circle 146px at 9% 42%, #b995cf42, transparent 74%),
-    radial-gradient(circle 102px at 85% 78%, #b57d9f33, transparent 74%),
-    linear-gradient(160deg,#392b40 0%,#4a3451 40%,#493347 72%,#56384f 100%);
 }
-html, body { background: var(--shell-sky) fixed !important; color: var(--color-text-body); }
+/* Day/night switch: the official panel fades colours for 250 ms under html.theme-transition, but gradient images
+   cannot fade. So the sky sits on two layers inside the official fixed .page-background (light below, dark above)
+   and only the dark layer's opacity changes, in step with the cards; html/body keep a plain colour that fades too. */
+html, body { background: var(--color-page) !important; color: var(--color-text-body); }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif !important; }
-.page-background { background: var(--shell-sky) fixed !important; }
+.page-background { background: var(--color-page) !important; overflow: hidden; }
+.page-background::before, .page-background::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none; }
+.page-background::before { background: var(--shell-sky-light); }
+.page-background::after { background: var(--shell-sky-dark); opacity: 0; }
+:root.dark .page-background::after { opacity: 1; }
+html.theme-transition .page-background::after { transition: opacity .25s ease-in-out !important; }
 .app-header { background: var(--color-header) !important; border-bottom: 1px solid var(--color-border); box-shadow: 0 4px 18px #69456b16 !important; }
 .app-header h2 { font-size: 19px !important; line-height: 1.4; }
 .sidebar-gradient { background: var(--color-sidebar) !important; border-right: 1px solid var(--color-border); backdrop-filter: none !important; }

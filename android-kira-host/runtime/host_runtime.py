@@ -2190,3 +2190,4 @@ def rollback_base(home, confirmation):
         return json.dumps({'rolled_back': False, 'detail': str(error)}, ensure_ascii=False)
     return json.dumps({'rolled_back': True, 'root': root.relative_to(home).as_posix(),
                        'detail': '已回到迁移前的基础环境，迁移后的 NapCat 与 QQ 数据已带回'}, ensure_ascii=False)
+

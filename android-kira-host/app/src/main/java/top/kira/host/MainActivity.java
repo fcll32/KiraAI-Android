@@ -14,7 +14,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
@@ -43,6 +45,9 @@ import android.widget.Toast;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Gravity;
+import android.view.WindowInsetsController;
+import android.animation.ValueAnimator;
+import android.webkit.JavascriptInterface;
 import android.text.InputType;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -106,6 +111,13 @@ public final class MainActivity extends Activity {
     private final Button[] componentStart = new Button[2], componentStop = new Button[2], componentRestart = new Button[2], panelButtons = new Button[2];
     private boolean showingEnvironment = true;
     private String selectedPanel;
+    /** KiraAI 面板自己的日间/夜间；显示该面板时，标题栏、底栏和系统栏跟着渐变（night：0 日间，1 夜间）。 */
+    private boolean panelDark;
+    private float night, nightTarget;
+    private ValueAnimator nightAnimator;
+    private FrameLayout screenFrame;
+    private View nightVeil;
+    private ShellGlass menuNight;
     private ValueCallback<Uri[]> upload;
     private ApkUpdater updater;
     private KiraBackupManager backups;
@@ -155,7 +167,8 @@ public final class MainActivity extends Activity {
         menuButton.setTextSize(22); menuButton.setGravity(Gravity.CENTER);
         menuButton.setPadding(0,0,0,0); menuButton.setTextColor(INK);
         menuButton.setContentDescription("打开菜单"); menuButton.setTooltipText("菜单");
-        menuButton.setBackground(ShellTheme.frost(this, 15)); ShellTheme.lift(menuButton, 3);
+        menuNight = ShellTheme.nightFrost(this, 15); menuNight.setAlpha(0);
+        menuButton.setBackground(new LayerDrawable(new Drawable[]{ShellTheme.frost(this, 15), menuNight})); ShellTheme.lift(menuButton, 3);
         header.addView(menuButton,new LinearLayout.LayoutParams(dp(44),dp(44)));
         branding = new LinearLayout(this); branding.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams brandParams = new LinearLayout.LayoutParams(0,-2,1); brandParams.leftMargin = dp(14);
@@ -212,8 +225,13 @@ public final class MainActivity extends Activity {
             if (index==0) showEnvironment(); else if (index==1 || index==2) showPanel(index==1 ? "kira" : "napcat");
         });
         dock.addView(navigation,new LinearLayout.LayoutParams(-1,dp(68))); root.addView(dock,new LinearLayout.LayoutParams(-1,-2));
-        FrameLayout screen=new FrameLayout(this); screen.setFitsSystemWindows(true);
+        FrameLayout screen=new FrameLayout(this); screen.setFitsSystemWindows(true); screenFrame=screen;
+        // 底色只在系统栏后面露出来（Android 15 起系统栏透明），夜间时跟着变深。
+        screen.setBackgroundColor(ShellTheme.DAY_STATUS);
         screen.addView(new ShellBackdrop(this),new FrameLayout.LayoutParams(-1,-1));
+        nightVeil=new View(this); nightVeil.setBackgroundColor(ShellTheme.NIGHT_PAGE); nightVeil.setAlpha(0f);
+        nightVeil.setVisibility(View.INVISIBLE); nightVeil.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        screen.addView(nightVeil,new FrameLayout.LayoutParams(-1,-1));
         screen.addView(root,new FrameLayout.LayoutParams(-1,-1));
         drawer=new ShellDrawer(this,new ShellDrawer.Listener() {
             @Override public void onAction(int action) { menuAction(action); }
@@ -551,6 +569,7 @@ public final class MainActivity extends Activity {
         settings.setAllowUniversalAccessFromFileURLs(false);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         settings.setSupportMultipleWindows(false);
+        if (index == 0) panel.addJavascriptInterface(new PanelNight(), ShellWebTheme.BRIDGE);
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(panel, false);
         panel.setWebViewClient(new WebViewClient() {
@@ -741,6 +760,68 @@ public final class MainActivity extends Activity {
         setCompactChrome(index != 0);
         workspace.showPage(index, animate);
         navigation.select(index, animate);
+        updateNight(animate);
+    }
+
+    /** 只在显示 KiraAI 面板且面板是夜间时变深；首页和 NapCat 面板保持日间。 */
+    private void updateNight(boolean animate) {
+        float target = panelDark && !showingEnvironment && !"napcat".equals(selectedPanel) ? 1f : 0f;
+        // 状态刷新会反复调用这里；已在朝同一方向渐变时不打断。
+        if (nightAnimator != null && nightTarget == target) return;
+        nightTarget = target;
+        if (nightAnimator != null) { nightAnimator.removeAllUpdateListeners(); nightAnimator.cancel(); nightAnimator = null; }
+        if (target == night) return;
+        if (!animate || !ValueAnimator.areAnimatorsEnabled() || !screenFrame.isAttachedToWindow()) { applyNight(target); return; }
+        // 与官方面板的主题渐变同样 250 毫秒，四周和面板一起变色。
+        ValueAnimator next = ValueAnimator.ofFloat(night, target);
+        next.setDuration(250); next.setInterpolator(ShellTheme.BOTH);
+        next.addUpdateListener(value -> applyNight((float) value.getAnimatedValue()));
+        next.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override public void onAnimationEnd(android.animation.Animator animation) { if (nightAnimator == animation) nightAnimator = null; }
+        });
+        nightAnimator = next; next.start();
+    }
+
+    @SuppressWarnings("deprecation") private void applyNight(float value) {
+        boolean wasDark = night >= .5f;
+        night = value;
+        nightVeil.setAlpha(value); nightVeil.setVisibility(value > 0f ? View.VISIBLE : View.INVISIBLE);
+        int status = ShellTheme.blend(ShellTheme.DAY_STATUS, ShellTheme.NIGHT_PAGE, value);
+        screenFrame.setBackgroundColor(status);
+        getWindow().setStatusBarColor(status);
+        getWindow().setNavigationBarColor(ShellTheme.blend(ShellTheme.DAY_NAVIGATION, ShellTheme.NIGHT_PAGE, value));
+        menuNight.setAlpha(Math.round(255 * value));
+        brand.setTextColor(ShellTheme.blend(INK, ShellTheme.NIGHT_INK, value));
+        caption.setTextColor(ShellTheme.blend(MUTED, ShellTheme.NIGHT_MUTED, value));
+        navigation.setNight(value);
+        // 系统栏图标在渐变过半时换色，避免浅底浅字或深底深字。
+        if ((value >= .5f) != wasDark) lightSystemBars(value < .5f);
+    }
+
+    @SuppressWarnings("deprecation") private void lightSystemBars(boolean light) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            WindowInsetsController controller = getWindow().getInsetsController();
+            int both = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+            if (controller != null) controller.setSystemBarsAppearance(light ? both : 0, both);
+        } else {
+            View decor = getWindow().getDecorView();
+            int flags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            int current = decor.getSystemUiVisibility();
+            decor.setSystemUiVisibility(light ? current | flags : current & ~flags);
+        }
+    }
+
+    /** KiraAI 面板 WebView 唯一的原生接口：报告面板是否夜间。只接收一个布尔值，不读写任何数据。 */
+    private final class PanelNight {
+        @JavascriptInterface public void dark(boolean value) {
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed() || panelDark == value) return;
+                panelDark = value;
+                // 面板重新加载、尚未绘制时露出的底色也跟着面板主题，不会在夜间闪一下浅色。
+                panelViews[0].setBackgroundColor(value ? ShellTheme.NIGHT_PAGE : ShellTheme.PAGE);
+                updateNight(true);
+            });
+        }
     }
 
     private void setCompactChrome(boolean compact) {
@@ -1254,7 +1335,7 @@ public final class MainActivity extends Activity {
         TextView note = dialogCopy(content, "账号登录、模型与业务配置由各自官方面板管理。", 11, MUTED, 15, 3);
         note.setGravity(Gravity.CENTER);
         dialogCopy(content,"项目主页",12,BLUE,15,4).setAccessibilityHeading(true);
-        addProjectLink(content,"01","KiraAI 手机版","Android 环境与组件管理","https://github.com/fcll32/kiraai-phone-assistant");
+        addProjectLink(content,"01","KiraAI 手机版","Android 环境与组件管理","https://github.com/fcll32/KiraAI-Android");
         addProjectLink(content,"02","KiraAI","AI 核心与官方管理面板","https://github.com/KiraAI-Dev/KiraAI");
         addProjectLink(content,"03","NapCatQQ（fork）","QQ 消息桥接组件 · 原仓库已删库","https://github.com/xxynet/NapCatQQ/releases/tag/v4.9.43");
         ShellDialogs.builder(this,ShellDialogs.Card.ABOUT).setTitle("关于").setView(ShellDialogs.scroll(this,content,.56f))
@@ -1546,6 +1627,7 @@ public final class MainActivity extends Activity {
     }
     @Override protected void onDestroy() {
         handler.removeCallbacks(refresh);
+        if (nightAnimator != null) { nightAnimator.removeAllUpdateListeners(); nightAnimator.cancel(); nightAnimator = null; }
         ShellDialogs.dispose(this);
         clearNotice();
         if (upload != null) { upload.onReceiveValue(null); upload = null; }

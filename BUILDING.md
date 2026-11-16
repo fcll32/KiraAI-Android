@@ -66,3 +66,7 @@ Provide `ORG_GRADLE_PROJECT_hostReleaseKeystore`, `ORG_GRADLE_PROJECT_hostReleas
 脚本默认生成 debug 包；正式签名通过进程环境变量提供。缺少签名配置时 release 包未签名，自建密钥不能覆盖发布者签名的安装。
 
 Outputs are under `android-kira-host/app/build/outputs/apk/` in the external copy. Before publishing to Release, check package ID, version, ABI, signature, size, SHA-256 and the APK/source relationship. Physical-device acceptance is a separate check.
+
+## Code 22 publication build / 本次打包
+
+Code 22 was compiled using AAPT2, javac and D8 with the checksum-bound Chaquopy dependencies retained from the earlier build. Current host Java and Python modules were rebuilt, then aligned, signed and verified. Windows Gradle native-library initialization failed in this environment; a clean Gradle build remains pending. The Release build-records attachment includes the assembly/signing scripts and per-file source binding used for this package.

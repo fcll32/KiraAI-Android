@@ -86,6 +86,16 @@ final class ApkUpdater {
         preferences = activity.getSharedPreferences("host_updates", Context.MODE_PRIVATE);
     }
 
+    private String manifestSource() {
+        String source = preferences.getString("manifest", BuildConfig.APK_UPDATE_MANIFEST);
+        // Migrate only the retired built-in URL; keep user-defined update sources.
+        if ("https://raw.githubusercontent.com/fcll32/kiraai-phone-assistant/main/android-host-update.json".equals(source)) {
+            source = BuildConfig.APK_UPDATE_MANIFEST;
+            preferences.edit().putString("manifest", source).apply();
+        }
+        return source;
+    }
+
     /** R5C3 rule for the downloaded update: gone once installed (or superseded), otherwise after seven days unused. */
     static final long STALE_UPDATE_MS = 7L * 24 * 60 * 60 * 1000;
 
@@ -131,7 +141,7 @@ final class ApkUpdater {
         sourceLabel.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         sourceLabel.setAccessibilityHeading(true);
         form.addView(sourceLabel);
-        EditText manifest = field(form, "APK 更新清单（HTTPS）", preferences.getString("manifest", BuildConfig.APK_UPDATE_MANIFEST));
+        EditText manifest = field(form, "APK 更新清单（HTTPS）", manifestSource());
         EditText mirror = field(form, "国内镜像前缀", preferences.getString("mirror", BuildConfig.APK_UPDATE_MIRROR));
         TextView scope = ShellCards.text(activity, "这里只更新手机应用本身。KiraAI 核心请在官方面板内更新。", 11, ShellTheme.MUTED);
         scope.setPadding(0, dp(8), 0, dp(8));

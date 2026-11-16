@@ -27,6 +27,11 @@ final class ShellTheme {
     static final int ROSE_SOFT = 0xFFF8E0EC, LILAC_SOFT = 0xFFEEE6F9, DISABLED = 0xFFA390A5;
     /** Jelly blooms and the violet-rose cast of every floating shadow. */
     static final int BLOOM_ROSE = 0xFFF08DBB, BLOOM_LILAC = 0xFFA98BEA, SHADE = 0xFF8A4F96, GLOW = 0xFFD9529A;
+    /** 夜间外观：与注入面板样式（shell-theme.css 的 :root.dark）同一套色值，标题栏、底栏和系统栏跟随 KiraAI 面板切换。 */
+    static final int NIGHT_PAGE = 0xFF302635, NIGHT_SURFACE = 0xFF3A2D40, NIGHT_RAISED = 0xFF44344B;
+    static final int NIGHT_INK = 0xFFFFF6FC, NIGHT_MUTED = 0xFFCBB3CD, NIGHT_LINE = 0xFF5D4865;
+    /** 日间系统栏底色（与 HostTheme 一致），夜间渐变的起点。 */
+    static final int DAY_STATUS = 0xFFF2E7EE, DAY_NAVIGATION = 0xFFF3E7EF;
     static final PathInterpolator ENTER = new PathInterpolator(.22f, 1f, .36f, 1f);
     static final PathInterpolator EXIT = new PathInterpolator(.4f, 0f, 1f, 1f);
     static final PathInterpolator BOTH = new PathInterpolator(.4f, 0f, .2f, 1f);
@@ -49,6 +54,14 @@ final class ShellTheme {
     static ShellGlass glass(Context context, int radius) { return new ShellGlass(context, radius, 0xFFFFFCFE, 0xFFFBEFF7); }
     /** Whiter sheet for layered decks, bars and floating rails. */
     static ShellGlass frost(Context context, int radius) { return new ShellGlass(context, radius, 0xFFFFFFFF, 0xFFFDF5FA); }
+    /** Night counterpart of frost: the panel's raised dark surface with a hairline, no gloss. */
+    static ShellGlass nightFrost(Context context, int radius) { return new ShellGlass(context, radius, NIGHT_RAISED, NIGHT_SURFACE).edge(NIGHT_LINE).gloss(0); }
+    static int blend(int from, int to, float fraction) {
+        return Color.argb(Math.round(Color.alpha(from) + (Color.alpha(to) - Color.alpha(from)) * fraction),
+            Math.round(Color.red(from) + (Color.red(to) - Color.red(from)) * fraction),
+            Math.round(Color.green(from) + (Color.green(to) - Color.green(from)) * fraction),
+            Math.round(Color.blue(from) + (Color.blue(to) - Color.blue(from)) * fraction));
+    }
     /** Tinted elevation: a soft violet-rose halo instead of the default grey. */
     static void lift(View view, float height) {
         view.setElevation(dp(view.getContext(), height));

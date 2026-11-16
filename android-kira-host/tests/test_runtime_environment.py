@@ -109,11 +109,17 @@ class RuntimeEnvironmentTests(unittest.TestCase):
 class OfficialTelemetryEnvironmentTests(unittest.TestCase):
     def test_official_pinned_client_exits_before_network_initialization(self):
         """Execute official code with network constructors replaced by traps."""
-        build = Path(__file__).resolve().parents[1] / 'build/runtime'
+        # Prepared runtime: KIRA_RUNTIME_BUILD, the build/runtime beside these tests (exists in the cache-root test copy), or the cache root.
+        relative = Path('android-kira-host/build/runtime')
+        cache = 'BaiduNetdiskDownload/kira这是缓存之类/workspaces/kira'
+        candidates = [Path(os.environ['KIRA_RUNTIME_BUILD'])] if os.environ.get('KIRA_RUNTIME_BUILD') else []
+        candidates += [Path(__file__).resolve().parents[2] / relative, Path('D:/') / cache / relative, Path('/mnt/d') / cache / relative]
+        build = next((path for path in candidates if (path / 'assets/official-kira-seed.zip').is_file()
+                      and (path / 'official-source-integrity.json').is_file()), None)
+        if build is None:
+            self.skipTest('Pinned official Kira v3.1.2 prepared source is unavailable: set KIRA_RUNTIME_BUILD, or run from the cache-root test copy')
         seed = build / 'assets/official-kira-seed.zip'
         integrity_path = build / 'official-source-integrity.json'
-        if not seed.is_file() or not integrity_path.is_file():
-            self.skipTest('Pinned official Kira v3.1.2 prepared source is unavailable')
         integrity = json.loads(integrity_path.read_text(encoding='utf-8'))
         self.assertEqual(integrity['commit'], '89013745ba3281bdc248e704bbcb619417cf4f57')
         item = next(item for item in integrity['files'] if item['path'] == 'core/telemetry/client.py')

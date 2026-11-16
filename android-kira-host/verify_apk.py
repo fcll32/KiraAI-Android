@@ -53,8 +53,8 @@ def native_expectations(manifest, expected_abis, host_mode):
 
 
 def verify(apk, expected_abis=None, host_mode=DEFAULT_HOST_MODE):
-    manifest = json.loads((HERE / 'build/runtime/assets/host-runtime.json').read_text())
-    originals = json.loads((HERE / 'build/runtime/official-source-integrity.json').read_text())
+    manifest = json.loads((HERE / 'build/runtime/assets/host-runtime.json').read_text(encoding='utf-8'))
+    originals = json.loads((HERE / 'build/runtime/official-source-integrity.json').read_text(encoding='utf-8'))
     abis, required, native_profile = native_expectations(manifest, expected_abis, host_mode)
     with zipfile.ZipFile(apk) as package:
         if package.testzip() is not None:

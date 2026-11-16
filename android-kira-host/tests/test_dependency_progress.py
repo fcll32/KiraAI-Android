@@ -13,16 +13,23 @@ import unittest
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parents[1]
+PIP_WHEEL = 'pip-26.3-py3-none-any.whl'
+PIP_SHA256 = 'f3b60b20ffaadd4415ed7957212a38ac63fa4c5fa375bd0f4a797777940fad13'
+CACHE_ROOT = 'BaiduNetdiskDownload/kira这是缓存之类/workspaces/kira'
+
+
+def reviewed_pip_wheel():
+    """The reviewed pip wheel: KIRA_PIP_WHEEL, the test copy's .runtime, or the fixed cache root (never the source tree's own cache)."""
+    relative = Path('.runtime/android-linux-runtime/artifacts/pip') / PIP_WHEEL
+    candidates = [Path(os.environ['KIRA_PIP_WHEEL'])] if os.environ.get('KIRA_PIP_WHEEL') else []
+    candidates += [HERE.parent / relative, Path('D:/') / CACHE_ROOT / relative, Path('/mnt/d') / CACHE_ROOT / relative]
+    return next((path for path in candidates if path.is_file()), None)
 sys.path.insert(0, str(HERE / 'runtime'))
 from dependency_progress import DependencyProgress, ProgressLogTail, safe_filename
 import host_runtime as boot
 
 
 class ProgressTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        (HERE / 'tests/tmp').mkdir(exist_ok=True)
-
     def test_partial_crlf_records_and_unknown_total_remain_indeterminate(self):
         parser = DependencyProgress('pip')
         self.assertEqual(parser.feed(b'Downloading https://user:private@example.invalid/a/pkg-1-py3-none-any.whl?token=secret\rProgr')[-1]['transfer_label'], 'pkg-1-py3-none-any.whl')
@@ -79,7 +86,7 @@ class ProgressTests(unittest.TestCase):
         self.assertEqual(safe_filename('https://token:secret@example.invalid/a/../../unsafe%0Apassword.whl?key=private'), 'Python 依赖')
 
     def test_log_tail_excludes_old_output_and_handles_append_and_truncation(self):
-        with tempfile.TemporaryDirectory(dir=HERE / 'tests/tmp') as directory:
+        with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'log'
             path.write_bytes(b'Progress 1 of 1\n')
             parser = DependencyProgress('pip')
@@ -99,9 +106,11 @@ class SlowServer(ThreadingHTTPServer):
 class RealPipTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.wheel = HERE.parent / '.runtime/android-linux-runtime/artifacts/pip/pip-26.3-py3-none-any.whl'
+        cls.wheel = reviewed_pip_wheel()
+        if cls.wheel is None:
+            raise unittest.SkipTest('Reviewed %s not found: set KIRA_PIP_WHEEL, or run from the cache-root test copy' % PIP_WHEEL)
         raw = cls.wheel.read_bytes()
-        if hashlib.sha256(raw).hexdigest() != 'f3b60b20ffaadd4415ed7957212a38ac63fa4c5fa375bd0f4a797777940fad13':
+        if hashlib.sha256(raw).hexdigest() != PIP_SHA256:
             raise AssertionError('Reviewed pip CLI wheel differs from its pinned SHA256')
         cls.raw = raw
         cls.environment = dict(os.environ, PYTHONPATH=str(cls.wheel), PYTHONUNBUFFERED='1',
@@ -111,8 +120,7 @@ class RealPipTests(unittest.TestCase):
             raise AssertionError('The real CLI fixture must execute the reviewed pip 26.3 wheel')
 
     def setUp(self):
-        (HERE / 'tests/tmp').mkdir(exist_ok=True)
-        self.temp = tempfile.TemporaryDirectory(dir=HERE / 'tests/tmp')
+        self.temp = tempfile.TemporaryDirectory()
         self.folder = Path(self.temp.name)
         self.length = True
         owner = self

@@ -73,7 +73,7 @@ def original_seed():
             raise ValueError('Official Git blob digest mismatch')
         original_files.append((path, int(mode, 8), data))
         position = end + size + 2
-    pip = json.loads((RUNTIME / 'artifacts/pip-progress-manifest.json').read_text())
+    pip = json.loads((RUNTIME / 'artifacts/pip-progress-manifest.json').read_text(encoding='utf-8'))
     wheel = RUNTIME / 'artifacts/pip' / pip['filename']
     if sha(wheel) != pip['sha256'] or wheel.stat().st_size != pip['size']:
         raise ValueError('Pip wheel integrity mismatch')
@@ -113,8 +113,8 @@ def original_seed():
 
 
 def prepare():
-    native = json.loads((RUNTIME / 'artifacts/native-runtime-manifest.json').read_text())
-    nodes = json.loads((RUNTIME / 'artifacts/node-runtime-manifest.json').read_text())
+    native = json.loads((RUNTIME / 'artifacts/native-runtime-manifest.json').read_text(encoding='utf-8'))
+    nodes = json.loads((RUNTIME / 'artifacts/node-runtime-manifest.json').read_text(encoding='utf-8'))
     roots = {item['architecture']: item for item in native['rootfs']}
     manifest = {'version': 1, 'abis': {}}
     for abi, (architecture, machine) in ABIS.items():

@@ -1,8 +1,8 @@
 # Third-party notices / 第三方说明
 
-These notices describe the native Android host and the v1.0.0 code 21 APK. License texts copied from that APK are in [third-party/licenses](third-party/licenses/). They are preserved verbatim and apply to their respective components. This file does not assign a license to the host's original code.
+These notices describe the native Android host and the v1.0.1 code 22 APK. License texts copied from that APK are in [third-party/licenses](third-party/licenses/). They are preserved verbatim and apply to their respective components. This file does not assign a license to the host's original code.
 
-本文对应当前原生 Android 宿主和 code 21 APK。许可原文从实际发布包提取并保留；旧版 uni-app/DCloud 宿主的依赖说明不适用于这个工程。
+本文对应当前原生 Android 宿主和 code 22 APK。许可原文从实际发布包提取并保留；旧版 uni-app/DCloud 宿主的依赖说明不适用于这个工程。
 
 | Component | Source / notices |
 | --- | --- |
@@ -16,7 +16,7 @@ These notices describe the native Android host and the v1.0.0 code 21 APK. Licen
 | Chaquopy 17.2.0 / Python 3.11 | Declared in Gradle and `android-kira-host/apk-native-profiles.json`; [Chaquopy source](https://github.com/chaquo/chaquopy) and [Python licensing](https://docs.python.org/3/license.html). |
 | Cursor swarm onboarding asset | `android-kira-host/app/src/main/assets/onboarding/cursor-swarm-LICENSE.txt`, MIT, copyright ZhengLinLei. |
 
-The [release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.0-code21) provides `KiraAI-Android-v1.0.0-runtime-sources.zip`: PRoot, talloc and libandroid-shmem source archives, license texts and recorded Termux recipes. Archive identities are in `build-inputs/corresponding-source-archives.json`; recipe identities are in `build-inputs/termux-recipes/EVIDENCE.json`. The recipe snapshot is not proof that those exact recipes/toolchains produced the downloaded binaries.
+The [release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.1-code22) provides `KiraAI-Android-v1.0.1-runtime-sources.zip`: PRoot, talloc and libandroid-shmem source archives, license texts and recorded Termux recipes. Archive identities are in `build-inputs/corresponding-source-archives.json`; recipe identities are in `build-inputs/termux-recipes/EVIDENCE.json`. The recipe snapshot is not proof that those exact recipes/toolchains produced the downloaded binaries.
 
 NapCat and Linux QQ are optional downloads installed at runtime; their upstream notices and terms remain applicable. They are not part of this host source checkout.
 

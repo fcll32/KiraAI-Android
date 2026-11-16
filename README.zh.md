@@ -16,35 +16,35 @@
 - 在同一个 Android 应用内提供 KiraAI 和 NapCat 面板。
 - 提供备份管理、运行状态查看和可选的本机 NapCat 支持。
 
-当前社区正式发布版本为 v1.0.0，versionCode 21，适用于 Android 9 及以上的 ARM64 手机。首次启动需要联网准备运行环境。验收范围与待办见[发布状态](RELEASE_STATUS.md)。
+当前社区正式发布版本为 v1.0.1，versionCode 22，适用于 Android 9 及以上的 ARM64 手机。首次启动需要联网准备运行环境。验收范围与待办见[发布状态](RELEASE_STATUS.md)。
 
 ## 下载与安装
 
-在 [v1.0.0 code 21 Release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.0-code21) 下载 APK。
+在 [v1.0.1 code 22 Release](https://github.com/fcll32/KiraAI-Android/releases/tag/v1.0.1-code22) 下载 APK。
 
-兼容包沿用旧版 0.6.3 测试包的签名，可以覆盖安装使用同一证书签名的版本。如果 Android 提示签名不一致，请保留已安装的应用，先核对其版本和签名证书。
+新版沿用 code 21 和旧版 0.6.3 兼容包的签名，可以覆盖安装使用同一证书签名的版本。如果 Android 提示签名不一致，请保留已安装的应用，先核对其版本和签名证书。
 
 APK 的 SHA-256：
 
 ```text
-338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d
+8a08b09988bcc297243f96c40fa9089d6d5b339507980f7d65dcd8671c8e4f62
 ```
 
 Release 同时提供 `SHA256SUMS.txt` 和运行时依赖源码归档。APK 作为 Release 附件分发。
 
 ### 应用内更新
 
-已发布的 code 21 APK 内置旧更新地址，目前返回 404。请在应用更新弹窗中，把 **APK 更新清单（HTTPS）** 改为：
+v1.0.1 已内置下方公开地址，且会迁移旧版保存的官方更新地址，保留自定义源。code 21 用户可先把应用更新弹窗的 **APK 更新清单（HTTPS）** 改为下方地址，以发现新版：
 
 ```text
 https://raw.githubusercontent.com/fcll32/KiraAI-Android/main/android-host-update.json
 ```
 
-点击“检查更新”保存设置。已安装 code 21 时会提示当前版本不低于已发布版本；也可从 Release 下载后，在应用中选择本地 APK。
+点击“检查更新”保存设置。已安装 code 22 时会提示当前版本不低于已发布版本；也可从 Release 下载后，在应用中选择本地 APK。
 
 ## 源码与构建
 
-Release 中的 APK 对应源码提交 [4f67d14](https://github.com/fcll32/KiraAI-Android/commit/4f67d14ccc28efaecbd76e6e2d48347fe34934bb)。仓库包含 Android 宿主、Python 运行时、测试代码和架构说明。
+Release 中的 APK 对应[发布源码标签](https://github.com/fcll32/KiraAI-Android/tree/v1.0.1-code22)。仓库包含 Android 宿主、Python 运行时、测试代码和架构说明。
 
 Android 工程使用 Android SDK 36、JDK 21、Gradle 9.2.1 和 Chaquopy 17.2.0。准备 APK 还需要项目文档所列的运行时归档和 KiraAI 官方种子。Git 仓库不包含本地运行时输入和生成的构建文件。
 

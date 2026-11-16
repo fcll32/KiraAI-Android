@@ -11,6 +11,8 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -35,6 +37,9 @@ public final class ShellNavigation extends LinearLayout {
     private float leading, trailing = 1f;
     private int selected;
     private boolean disposed;
+    /** 0 = 日间，1 = 夜间（跟随 KiraAI 面板）；中间值是切换途中的渐变。 */
+    private float night, indicatorNight = -1;
+    private final ShellGlass nightSheet;
 
     public ShellNavigation(Context context, Listener listener) {
         super(context);
@@ -45,7 +50,10 @@ public final class ShellNavigation extends LinearLayout {
         setWillNotDraw(false);
         setMinimumHeight(dp(68));
         setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-        setBackground(ShellTheme.frost(context, 34));
+        // 夜间底板叠在日间底板上，只改它的透明度，两套外观之间平滑渐变。
+        nightSheet = ShellTheme.nightFrost(context, 34);
+        nightSheet.setAlpha(0);
+        setBackground(new LayerDrawable(new Drawable[]{ShellTheme.frost(context, 34), nightSheet}));
         ShellTheme.lift(this, 10);
         indicatorRim.setStyle(Paint.Style.STROKE); indicatorRim.setStrokeWidth(dp(1));
         for (int i = 0; i < items.length; i++) {
@@ -97,6 +105,14 @@ public final class ShellNavigation extends LinearLayout {
         setPadding(dp(GAP), dp(compact ? 0 : GAP), dp(GAP), dp(compact ? 0 : GAP));
         setMinimumHeight(dp(compact ? 48 : 56));
     }
+    public void setNight(float value) {
+        value = Math.max(0f, Math.min(1f, value));
+        if (value == night) return;
+        night = value;
+        nightSheet.setAlpha(Math.round(255 * value));
+        for (Item item : items) item.invalidate();
+        invalidate();
+    }
     public void dispose() { disposed = true; cancelAnimation(); settle(); }
     private void cancelAnimation() {
         if (animator != null) { animator.removeAllUpdateListeners(); animator.cancel(); animator = null; }
@@ -111,12 +127,14 @@ public final class ShellNavigation extends LinearLayout {
         float unit = (getWidth() - getPaddingLeft() - getPaddingRight()) / 3f;
         float gap = dp(GAP);
         indicator.set(getPaddingLeft() + leading * unit, gap, getPaddingLeft() + trailing * unit, getHeight() - gap);
-        if (indicatorHeight != getHeight()) {
+        if (indicatorHeight != getHeight() || indicatorNight != night) {
             // 果冻胶囊：同一色相的淡玫瑰、同色柔光和一圈亮边；着色器只在高度变化时重建。
-            indicatorHeight = getHeight();
-            indicatorPaint.setShader(new LinearGradient(0, gap, 0, getHeight() - gap, 0xFFFFE9F2, 0xFFFBDBE9, Shader.TileMode.CLAMP));
+            indicatorHeight = getHeight(); indicatorNight = night;
+            indicatorPaint.setShader(new LinearGradient(0, gap, 0, getHeight() - gap,
+                blend(0xFFFFE9F2, 0xFF5E3F5E, night), blend(0xFFFBDBE9, 0xFF553955, night), Shader.TileMode.CLAMP));
             indicatorPaint.setShadowLayer(dp(5), 0, dp(1.5f), 0x38D9529A);
-            indicatorRim.setShader(new LinearGradient(0, gap, 0, getHeight() - gap, 0xFFFFFFFF, 0x80FFFFFF, Shader.TileMode.CLAMP));
+            indicatorRim.setShader(new LinearGradient(0, gap, 0, getHeight() - gap,
+                blendArgb(0xFFFFFFFF, 0x40FFFFFF, night), blendArgb(0x80FFFFFF, 0x14FFFFFF, night), Shader.TileMode.CLAMP));
         }
         float corner = (indicator.height()) / 2f, half = dp(1) / 2f;
         canvas.drawRoundRect(indicator, corner, corner, indicatorPaint);
@@ -176,12 +194,12 @@ public final class ShellNavigation extends LinearLayout {
                 if (ready && "reachable".equals(health)) colorForHealth = ShellTheme.ACCENT;
                 else if (ready && "unknown".equals(health)) colorForHealth = ShellTheme.TEAL;
                 // 面板状态点压在图标右下角，白色描边把它从图案上分开。
-                paint.setStyle(Paint.Style.FILL); paint.setColor(Color.WHITE);
+                paint.setStyle(Paint.Style.FILL); paint.setColor(blend(Color.WHITE, ShellTheme.NIGHT_RAISED, night));
                 canvas.drawCircle(center + dp(13), iconY + dp(12), dp(4.5f), paint);
                 paint.setColor(colorForHealth);
                 canvas.drawCircle(center + dp(13), iconY + dp(12), dp(3), paint);
             }
-            textPaint.setColor(blend(ShellTheme.MUTED, INK, amount));
+            textPaint.setColor(blend(blend(ShellTheme.MUTED, ShellTheme.NIGHT_MUTED, night), blend(INK, ShellTheme.NIGHT_INK, night), amount));
             textPaint.setTextSize(11 * getResources().getDisplayMetrics().scaledDensity);
             float room = Math.max(1, getWidth() - dp(8));
             if (textPaint.measureText(TITLES[index]) > room) textPaint.setTextSize(textPaint.getTextSize() * room / textPaint.measureText(TITLES[index]));
@@ -198,6 +216,11 @@ public final class ShellNavigation extends LinearLayout {
             int kind=index==0?ShellIcons.ENVIRONMENT:index==1?ShellIcons.CORE:ShellIcons.BRIDGE;
             ShellIcons.draw(canvas,kind,centerX-dp(18),centerY-dp(18),dp(36));
         }
+    }
+
+    private static int blendArgb(int from, int to, float fraction) {
+        int alpha = Math.round(Color.alpha(from) + (Color.alpha(to) - Color.alpha(from)) * fraction);
+        return (alpha << 24) | (blend(from, to, fraction) & 0xFFFFFF);
     }
 
     private static int blend(int from, int to, float fraction) {
