@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "official_repository": "https://github.com/termux/termux-packages",
+  "commit": "850ec772092e2baadd8118fed9e4960abb3ee9ee",
+  "packages": [
+    {
+      "package": "proot",
+      "version": "5.1.107.102",
+      "files": [
+        {
+          "path": "termux-recipes/proot/build.sh",
+          "url": "https://raw.githubusercontent.com/termux/termux-packages/850ec772092e2baadd8118fed9e4960abb3ee9ee/packages/proot/build.sh",
+          "size": 1268,
+          "sha256": "d8fa15724e6f376d1b0f24802edb6fa3bd79bf91b0b662716e55eb285be620ab"
+        },
+        {
+          "path": "termux-recipes/proot/termux-chroot",
+          "url": "https://raw.githubusercontent.com/termux/termux-packages/850ec772092e2baadd8118fed9e4960abb3ee9ee/packages/proot/termux-chroot",
+          "size": 3106,
+          "sha256": "71f5d77e680a029d0c053699b407bd4a45068153f1ec545eb1cd00b26dd36008"
+        }
+      ]
+    },
+    {
+      "package": "libtalloc",
+      "version": "2.5.0",
+      "files": [
+        {
+          "path": "termux-recipes/libtalloc/build.sh",
+          "url": "https://raw.githubusercontent.com/termux/termux-packages/850ec772092e2baadd8118fed9e4960abb3ee9ee/packages/libtalloc/build.sh",
+          "size": 2224,
+          "sha256": "b722c5adb89e4d4ad4595dbba40be562d9894103a190777392c363b57b1a7201"
+        }
+      ]
+    },
+    {
+      "package": "libandroid-shmem",
+      "version": "0.7",
+      "files": [
+        {
+          "path": "termux-recipes/libandroid-shmem/build.sh",
+          "url": "https://raw.githubusercontent.com/termux/termux-packages/850ec772092e2baadd8118fed9e4960abb3ee9ee/packages/libandroid-shmem/build.sh",
+          "size": 583,
+          "sha256": "0262fc1342aedf7d14e2b6a2932c33e0ebc9bd1f4a80533bd0f2400c6ef9ccf3"
+        }
+      ]
+    }
+  ],
+  "native_binary_rebuilt": false,
+  "binary_build_commit_correspondence": "unverified; matching package version and official recipe are retained, not a toolchain/build attestation"
+}

@@ -1,0 +1,3 @@
+# Preserve upstream license and recipe bytes exactly as distributed.
+third-party/licenses/** -text
+build-inputs/termux-recipes/** -text

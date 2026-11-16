@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "channel": "android-linux-host",
+  "application_id": "top.kira.pythonprobe",
+  "version_name": "1.0.0",
+  "version_code": 21,
+  "min_sdk": 28,
+  "apk": {
+    "url": "https://github.com/fcll32/KiraAI-Android/releases/download/v1.0.0-code21/KiraAI-Host-v1.0.0-code21-arm64-legacy-signature.apk",
+    "sha256": "338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d",
+    "size": 84158655
+  },
+  "notes": "KiraAI 手机版 v1.0.0 正式发布（code 21），适用于 Android 9+ ARM64。沿用 0.6.3 的签名证书；不同签名的安装无法直接覆盖。"
+}

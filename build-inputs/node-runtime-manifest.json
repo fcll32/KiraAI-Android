@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "node_version": "v24.22.2",
+  "release_date": "2026-10-28",
+  "release_status": "LTS (Maintenance)",
+  "codename": "Krypton",
+  "abis": {
+    "arm64-v8a": {
+      "filename": "node-v24.22.2-linux-arm64.tar.xz",
+      "url": "https://nodejs.org/download/release/v24.22.2/node-v24.22.2-linux-arm64.tar.xz",
+      "sha256": "eb187837a2230d4047161ac0be008584e16b46f726e9c9490ee35dc6b17d9ba8",
+      "size": 30968168,
+      "version": "v24.22.2",
+      "architecture": "arm64",
+      "topdir": "node-v24.22.2-linux-arm64",
+      "strip_components": 1,
+      "local_path": ".runtime/android-linux-runtime/artifacts/node/node-v24.22.2-linux-arm64.tar.xz",
+      "binary_sha256": "b4855de8c4781130b722ceaec9718fed77cca3eed2e5cfc5455e267c0b9ee3b0",
+      "binary_machine": 183,
+      "archive_entries": 5888,
+      "elf_load_alignments": [
+        65536,
+        65536
+      ],
+      "elf_16kb_aligned": true,
+      "maximum_imported_symbol_versions": {
+        "GLIBC": "2.28",
+        "GLIBCXX": "3.4.21"
+      },
+      "npm_version": "11.19.1",
+      "npm_bin_symlinks": {
+        "npm": "../lib/node_modules/npm/bin/npm-cli.js",
+        "npx": "../lib/node_modules/npm/bin/npx-cli.js"
+      },
+      "license": {
+        "path": ".runtime/android-linux-runtime/artifacts/node/LICENSE-arm64.txt",
+        "sha256": "5888dbb9a1d2b18f2c3e6c5f6af1b39de658372b402a0577b002777f14c62ace",
+        "size": 157609
+      }
+    },
+    "x86_64": {
+      "filename": "node-v24.22.2-linux-x64.tar.xz",
+      "url": "https://nodejs.org/download/release/v24.22.2/node-v24.22.2-linux-x64.tar.xz",
+      "sha256": "48cc0e21e048790e54c0cf5749c2725005313d652651c40b7a21feb9697aaf75",
+      "size": 32039312,
+      "version": "v24.22.2",
+      "architecture": "x64",
+      "topdir": "node-v24.22.2-linux-x64",
+      "strip_components": 1,
+      "local_path": ".runtime/android-linux-runtime/artifacts/node/node-v24.22.2-linux-x64.tar.xz",
+      "binary_sha256": "904a6d3484241d466989f9df9ba3aab822b1496191bdb28230eb491a55c32a52",
+      "binary_machine": 62,
+      "archive_entries": 5888,
+      "elf_load_alignments": [
+        4096,
+        8192,
+        2097152,
+        4096,
+        4096
+      ],
+      "elf_16kb_aligned": false,
+      "maximum_imported_symbol_versions": {
+        "GLIBC": "2.28",
+        "GLIBCXX": "3.4.21"
+      },
+      "npm_version": "11.19.1",
+      "npm_bin_symlinks": {
+        "npm": "../lib/node_modules/npm/bin/npm-cli.js",
+        "npx": "../lib/node_modules/npm/bin/npx-cli.js"
+      },
+      "license": {
+        "path": ".runtime/android-linux-runtime/artifacts/node/LICENSE-x64.txt",
+        "sha256": "5888dbb9a1d2b18f2c3e6c5f6af1b39de658372b402a0577b002777f14c62ace",
+        "size": 157609
+      }
+    }
+  },
+  "compatibility": {
+    "guest": "GNU/Linux glibc",
+    "minimum_glibc": "2.28",
+    "minimum_kernel": "4.18",
+    "linux_arm64": "Tier 1",
+    "linux_x64": "Tier 1",
+    "android_kernel_and_proot_execution": "Requires separate device validation"
+  },
+  "evidence": {
+    "checksums": {
+      "url": "https://nodejs.org/download/release/v24.22.2/SHASUMS256.txt",
+      "path": ".runtime/android-linux-runtime/artifacts/node/SHASUMS256.txt",
+      "sha256": "aec92ae945293821c22aed4c37b97741688254bac353b861fc9fb25b81ce4567",
+      "size": 3171
+    },
+    "signed_checksums": {
+      "url": "https://nodejs.org/download/release/v24.22.2/SHASUMS256.txt.asc",
+      "path": ".runtime/android-linux-runtime/artifacts/node/SHASUMS256.txt.asc",
+      "sha256": "cbff095ae2d793bc0ffed794e7ef4a6609f7157a0fcb3b051176c09e3320e4a2",
+      "size": 3449
+    },
+    "detached_signature": {
+      "url": "https://nodejs.org/download/release/v24.22.2/SHASUMS256.txt.sig",
+      "path": ".runtime/android-linux-runtime/artifacts/node/SHASUMS256.txt.sig",
+      "sha256": "0dc0feb73ffcafe5875a7f34f3aa9a51787f68d85a1bde8a49e27257ad74ea07",
+      "size": 119
+    },
+    "build_contract": {
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.22.2/BUILDING.md",
+      "path": ".runtime/android-linux-runtime/artifacts/node/BUILDING.md",
+      "sha256": "01647fa20b9ddab794898f5e49c76d332fe5e7ea1c9765c526bc162685119096",
+      "size": 38475
+    },
+    "source_license": {
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.22.2/LICENSE",
+      "path": ".runtime/android-linux-runtime/artifacts/node/LICENSE-official.txt",
+      "sha256": "5888dbb9a1d2b18f2c3e6c5f6af1b39de658372b402a0577b002777f14c62ace",
+      "size": 157609
+    },
+    "release_page": "https://nodejs.org/en/blog/release/v24.22.2",
+    "release_schedule": "https://github.com/nodejs/Release",
+    "source_archive": {
+      "url": "https://nodejs.org/download/release/v24.22.2/node-v24.22.2.tar.xz",
+      "sha256": "8fe2ec1723bb9f8d0b683907c82708debbeda64af21cb2aa214c4241eed0a061",
+      "downloaded": false
+    },
+    "checksum_validation": "Both downloaded binaries matched the reviewed official release SHA256 and exact response size",
+    "binary_download_validation": "passed",
+    "pgp_signature_verification": "Not performed; signed checksum files retained without claiming PGP trust verification"
+  },
+  "integration": {
+    "install_prefix": "/opt/kira-node",
+    "path_prefix": "/opt/kira-node/bin",
+    "tools": [
+      "node",
+      "npm",
+      "npx"
+    ],
+    "notes": [
+      "Download only the device ABI archive; extract with one top directory removed.",
+      "Preserve relative npm/npx symlinks, executable permissions and the complete LICENSE.",
+      "The binary tarball includes npm and npx; Debian npm/nodejs packages are unnecessary."
+    ]
+  }
+}

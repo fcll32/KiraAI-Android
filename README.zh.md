@@ -16,7 +16,7 @@
 - 在同一个 Android 应用内提供 KiraAI 和 NapCat 面板。
 - 提供备份管理、运行状态查看和可选的本机 NapCat 支持。
 
-当前社区测试包为 v1.0.0，versionCode 21，适用于 Android 9 及以上的 ARM64 手机。首次启动需要联网准备运行环境。
+当前社区正式发布版本为 v1.0.0，versionCode 21，适用于 Android 9 及以上的 ARM64 手机。首次启动需要联网准备运行环境。验收范围与待办见[发布状态](RELEASE_STATUS.md)。
 
 ## 下载与安装
 
@@ -26,7 +26,21 @@
 
 APK 的 SHA-256：
 
+```text
 338cad34a178d3771a296330ff4c866ab0ab19816b83d20f6cba3e99b725834d
+```
+
+Release 同时提供 `SHA256SUMS.txt` 和运行时依赖源码归档。APK 作为 Release 附件分发。
+
+### 应用内更新
+
+已发布的 code 21 APK 内置旧更新地址，目前返回 404。请在应用更新弹窗中，把 **APK 更新清单（HTTPS）** 改为：
+
+```text
+https://raw.githubusercontent.com/fcll32/KiraAI-Android/main/android-host-update.json
+```
+
+点击“检查更新”保存设置。已安装 code 21 时会提示当前版本不低于已发布版本；也可从 Release 下载后，在应用中选择本地 APK。
 
 ## 源码与构建
 
@@ -34,7 +48,11 @@ Release 中的 APK 对应源码提交 [4f67d14](https://github.com/fcll32/KiraAI
 
 Android 工程使用 Android SDK 36、JDK 21、Gradle 9.2.1 和 Chaquopy 17.2.0。准备 APK 还需要项目文档所列的运行时归档和 KiraAI 官方种子。Git 仓库不包含本地运行时输入和生成的构建文件。
 
-Windows 构建入口为 android-kira-host/build.ps1。手机包使用 -Abi arm64。构建与验收详情见 [ANDROID_LINUX_RUNTIME.md](ANDROID_LINUX_RUNTIME.md) 和 [ANDROID_HOST_REFACTOR_PLAN.md](ANDROID_HOST_REFACTOR_PLAN.md)。
+前置输入、外部构建目录与签名说明见 [BUILDING.md](BUILDING.md)。Windows 入口为 `android-kira-host/build.ps1 -Abi arm64`，默认生成 debug 包；新克隆的仓库目前还不能直接一键构建。[ANDROID_LINUX_RUNTIME.md](ANDROID_LINUX_RUNTIME.md) 和 [ANDROID_HOST_REFACTOR_PLAN.md](ANDROID_HOST_REFACTOR_PLAN.md) 保留架构与历史验收记录。
+
+## 许可证
+
+宿主原创源码采用 [MIT 许可证](LICENSE)。KiraAI 本体及其他第三方组件保留各自许可证；说明和许可原文见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 上游项目
 

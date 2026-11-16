@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "target_sdk": 35,
+  "android_api_tested": 35,
+  "native_binaries": {
+    "arm64-v8a": [
+      {
+        "apk_filename": "libproot.so",
+        "source": ".runtime/android-linux-runtime/artifacts/aarch64/extracted/data/data/com.termux/files/usr/bin/proot",
+        "sha256": "3621937c1c5a98d0d39ca599af573a6bc15128690606d535e8b05da00cec4f41",
+        "bytes": 259832,
+        "elf_machine": 183,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      },
+      {
+        "apk_filename": "libprootloader.so",
+        "source": ".runtime/android-linux-runtime/artifacts/aarch64/extracted/data/data/com.termux/files/usr/libexec/proot/loader",
+        "sha256": "1da54355333cca3fb6ee10e3b82a24df24fb230c99241ce83809bf9e240609b5",
+        "bytes": 18136,
+        "elf_machine": 183,
+        "load_alignments": [
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      },
+      {
+        "apk_filename": "libtalloc.so",
+        "source": ".runtime/android-linux-runtime/artifacts/aarch64/extracted/data/data/com.termux/files/usr/lib/libtalloc.so.2.5.0",
+        "sha256": "742b438c4d09e276985a61d44164c9de207b6d8cc268f3018cb3001961bcb309",
+        "bytes": 33592,
+        "elf_machine": 183,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      },
+      {
+        "apk_filename": "libandroid-shmem.so",
+        "source": ".runtime/android-linux-runtime/artifacts/aarch64/extracted/data/data/com.termux/files/usr/lib/libandroid-shmem.so",
+        "sha256": "84475798e07c8174dbbfaec70a827fdb02f19ffa69a589380c13e7507fd0e731",
+        "bytes": 14432,
+        "elf_machine": 183,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      }
+    ],
+    "x86_64": [
+      {
+        "apk_filename": "libproot.so",
+        "source": ".runtime/android-linux-runtime/artifacts/x86_64/extracted/data/data/com.termux/files/usr/bin/proot",
+        "sha256": "3dd2e5b23aee8dd8588750117f03b1b7971314e7457067af803d78d57306391d",
+        "bytes": 277144,
+        "elf_machine": 62,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      },
+      {
+        "apk_filename": "libprootloader.so",
+        "source": ".runtime/android-linux-runtime/artifacts/x86_64/extracted/data/data/com.termux/files/usr/libexec/proot/loader",
+        "sha256": "a836b0569c84b1661333d16bacf6b396ff08fea816a5c936a82e08ddeeca8341",
+        "bytes": 18368,
+        "elf_machine": 62,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      },
+      {
+        "apk_filename": "libtalloc.so",
+        "source": ".runtime/android-linux-runtime/artifacts/x86_64/extracted/data/data/com.termux/files/usr/lib/libtalloc.so.2.5.0",
+        "sha256": "7fa6722a4320495b1b85832fc7fd02de0cb367b45f116c1921b2830a6936da90",
+        "bytes": 32536,
+        "elf_machine": 62,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      },
+      {
+        "apk_filename": "libandroid-shmem.so",
+        "source": ".runtime/android-linux-runtime/artifacts/x86_64/extracted/data/data/com.termux/files/usr/lib/libandroid-shmem.so",
+        "sha256": "092926060298acd3778e6239033d7aef1280dcb59aebe021a3719612e6a3465f",
+        "bytes": 14368,
+        "elf_machine": 62,
+        "load_alignments": [
+          16384,
+          16384,
+          16384
+        ],
+        "load_segments_16k_aligned": true
+      }
+    ]
+  },
+  "rootfs": [
+    {
+      "source": "Debian official Docker image artifacts (Debuerreotype)",
+      "architecture": "arm64v8",
+      "source_commit": "e36653f9967231373aeba7cff2102fd004ac4f4a",
+      "url": "https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/e36653f9967231373aeba7cff2102fd004ac4f4a/bookworm/slim/oci/blobs/rootfs.tar.gz",
+      "sha256": "f791e47cf52abf7b364878f2141547e3781072e437f599f6632849d88fca8ca4",
+      "bytes": 28137951,
+      "manifest_sha256": "7ccb8b5b60c7654f5b795d94ee7d751cd0811500803f0b09cefcd555e755a55a"
+    },
+    {
+      "source": "Debian official Docker image artifacts (Debuerreotype)",
+      "architecture": "amd64",
+      "source_commit": "69faaf492e77aff83e4c7fc401017c9d25ecde24",
+      "url": "https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/69faaf492e77aff83e4c7fc401017c9d25ecde24/bookworm/slim/oci/blobs/rootfs.tar.gz",
+      "sha256": "3c5439d0ae62993af4cc4e21b8c777297e81bc40e200d4633c85a3e0f977a3bc",
+      "bytes": 28247437,
+      "manifest_sha256": "a3bba7dc7dbcc1f37c2856c51fc9a7fac96608f50cb87b1b4e4d8b8c85ae988e"
+    }
+  ],
+  "rootfs_strip_components": 0,
+  "verified_runtime_environment": {
+    "LD_LIBRARY_PATH": "<app-files>/runtime/lib",
+    "PROOT_LOADER": "<nativeLibraryDir>/libprootloader.so",
+    "PROOT_TMP_DIR": "<app-files>/tmp",
+    "PROOT_NO_SECCOMP": "1"
+  },
+  "verified_argv": [
+    "<nativeLibraryDir>/libproot.so",
+    "-0",
+    "-r",
+    "<app-files>/debian-rootfs",
+    "-b",
+    "/dev",
+    "-b",
+    "/proc",
+    "-w",
+    "/",
+    "/bin/sh",
+    "-c",
+    "printf 'KIRA_DEBIAN_EXEC_OK\\n'; /usr/bin/id; /bin/cat /etc/debian_version; /bin/echo NESTED_EXEC_OK"
+  ],
+  "host_cwd": "<app-files>",
+  "dependency_staging": {
+    "libtalloc.so": "Copy APK-native libtalloc.so into <app-files>/runtime/lib/libtalloc.so.2 (same bytes)",
+    "libandroid-shmem.so": "Copy into <app-files>/runtime/lib/libandroid-shmem.so (same bytes)"
+  },
+  "licenses": {
+    "proot": {
+      "spdx": "GPL-2.0-or-later",
+      "source": "https://github.com/termux/proot/tree/v5.1.107.102",
+      "source_archive": ".runtime/android-linux-runtime/artifacts/proot-v5.1.107.102-source.zip",
+      "source_archive_sha256": "30d12a6e2cc4147123756ff58edea262d3083bbc238c12d0ab9b39e3d1c40852",
+      "build_recipe": "https://github.com/termux/termux-packages/blob/850ec772092e2baadd8118fed9e4960abb3ee9ee/packages/proot/build.sh"
+    },
+    "libtalloc": {
+      "spdx": "LGPL-3.0-or-later",
+      "source": "https://download.samba.org/pub/talloc/talloc-2.5.0.tar.gz"
+    },
+    "libandroid-shmem": {
+      "spdx": "BSD-3-Clause",
+      "source": "https://github.com/termux/libandroid-shmem/tree/v0.7"
+    }
+  }
+}

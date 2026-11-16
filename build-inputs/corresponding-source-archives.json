@@ -1,0 +1,20 @@
+[
+  {
+    "filename": "proot-v5.1.107.102-source.zip",
+    "url": "https://codeload.github.com/termux/proot/zip/refs/tags/v5.1.107.102",
+    "sha256": "30d12a6e2cc4147123756ff58edea262d3083bbc238c12d0ab9b39e3d1c40852",
+    "bytes": 552401
+  },
+  {
+    "filename": "talloc-2.5.0-source.tar.gz",
+    "url": "https://download.samba.org/pub/talloc/talloc-2.5.0.tar.gz",
+    "sha256": "912afa237510ae542a7733998eb18a12bcda35ab6729c8e2ddb43e8d0ebab007",
+    "bytes": 690172
+  },
+  {
+    "filename": "libandroid-shmem-v0.7-source.tar.gz",
+    "url": "https://codeload.github.com/termux/libandroid-shmem/tar.gz/refs/tags/v0.7",
+    "sha256": "1e5ff8459bc0a8c229dd8a94b27d119987e09ef3414331c2b5ebfff20b98e867",
+    "bytes": 8891
+  }
+]

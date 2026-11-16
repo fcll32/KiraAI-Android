@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "package_version": "26.3",
+  "filename": "pip-26.3-py3-none-any.whl",
+  "url": "https://files.pythonhosted.org/packages/07/25/ee8c38ae72d66b844ce8eb9711ba905dba21ca1a8a0c960057c41cd23337/pip-26.3-py3-none-any.whl",
+  "sha256": "f3b60b20ffaadd4415ed7957212a38ac63fa4c5fa375bd0f4a797777940fad13",
+  "size": 1950951,
+  "license_sha256": "634300a669d49aeae65b12c6c48c924c51a4cdf3d1ff086dc3456dc8bcaa2104",
+  "official_metadata_url": "https://pypi.org/pypi/pip/26.3/json",
+  "protocol": "--progress-bar=raw: Progress CURRENT of TOTAL; TOTAL=0 if unknown",
+  "android_native_extensions": false,
+  "vendor_windows_launchers": [
+    "pip/_vendor/distlib/t32.exe",
+    "pip/_vendor/distlib/t64-arm.exe",
+    "pip/_vendor/distlib/t64.exe",
+    "pip/_vendor/distlib/w32.exe",
+    "pip/_vendor/distlib/w64-arm.exe",
+    "pip/_vendor/distlib/w64.exe"
+  ]
+}
