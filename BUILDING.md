@@ -2,9 +2,9 @@
 
 ## Status / 现状
 
-The application source is published, but a fresh clone is **not yet a self-contained build environment**. Existing scripts require prepared runtime archives, manifests, toolchains and an upstream Git checkout. Pinned inputs are recorded in `build-inputs/`. Automated provisioning and a clean-machine build remain to be completed.
+The application source is published, but a fresh clone is **not yet a self-contained build environment**. Existing scripts require prepared runtime archives, manifests, toolchains, Git and an authenticated GitHub CLI (`gh`). Pinned inputs are recorded in `build-inputs/`. Automated provisioning and a clean-machine build remain to be completed.
 
-应用源码已公开，但新克隆的仓库**还不能直接一键构建**。现有脚本依赖预先准备的归档、清单、工具链和上游 Git 副本；固定输入见 `build-inputs/`，自动准备流程及干净环境构建仍待补齐。
+应用源码已公开，但新克隆的仓库**还不能直接一键构建**。现有脚本依赖预先准备的归档、清单、工具链、Git 和已登录的 GitHub CLI（`gh`）；固定输入见 `build-inputs/`，自动准备流程及干净环境构建仍待补齐。
 
 ## External workspace / 外部工作目录
 
@@ -39,12 +39,13 @@ The root of the external build copy must contain `android-kira-host/` and this p
     pip/...
     licenses/...
   official-kira/
-    v3.1.2/                         # pinned Git checkout
-    artifacts/dist-v3.1.2.zip
+    repository.git/                 # automatically fetched latest release tag
+    artifacts/<asset-id>/dist.zip   # automatically downloaded release frontend
 ```
 
 - Gradle declares Android Gradle Plugin `9.0.1`, Chaquopy `17.2.0`, Python `3.11` and `certifi==2026.10.23`.
-- KiraAI seed: `v3.1.2`, commit `89013745ba3281bdc248e704bbcb619417cf4f57`. The Git checkout must be at this commit. The frontend ZIP must be 2,232,346 bytes, SHA-256 `eba1639b7e7c7ca8089b8e3beb51be93c555cb42f19d6e51e40f9f9676affe09`.
+- KiraAI seed: each `prepare_assets.py` run resolves the official GitHub `releases/latest`, fetches that release tag and downloads its `dist.zip`. Git and an authenticated `gh` must be available on `PATH`. The frontend size and SHA-256 are checked against the selected release asset metadata. Matching cached downloads are reused. The actual tag, commit and artifact digests are recorded in `build/runtime/assets/host-runtime.json` and `build/runtime/official-source-integrity.json`. A missing release asset or failed download/check aborts preparation.
+- KiraAI 首装包在每次准备资源时解析官方 latest，源码和 WebUI 使用同一发行版。版本、提交和摘要记录在构建清单中；已安装实例继续使用 KiraAI 自身的更新流程。
 - Copy the three runtime manifests from `build-inputs/` into the external artifacts directory. Native `source` paths are relative to the external build-copy root; run packaging from that root. Other manifests record upstream URLs and checksums.
 - `prepare_assets.py` currently requires **both ARM64 and x86_64 inputs**, even for an ARM64-only APK.
 - Runtime source archives and Termux recipes are available as a Release attachment; this attachment does not include SDKs or prebuilt runtime payloads. See [third-party notices](THIRD_PARTY_NOTICES.md).

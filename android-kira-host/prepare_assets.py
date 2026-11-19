@@ -1,6 +1,7 @@
 """Package original official Kira and checksum-bound Linux host artifacts."""
 import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
 import struct
@@ -10,10 +11,9 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 RUNTIME = ROOT / '.runtime/android-linux-runtime'
-OFFICIAL = ROOT / '.runtime/official-kira/v3.1.2'
+OFFICIAL = ROOT / '.runtime/official-kira'
 OUTPUT = HERE / 'build/runtime'
-COMMIT = '89013745ba3281bdc248e704bbcb619417cf4f57'
-DIST_SHA = 'eba1639b7e7c7ca8089b8e3beb51be93c555cb42f19d6e51e40f9f9676affe09'
+OFFICIAL_REPOSITORY = 'KiraAI-Dev/KiraAI'
 ABIS = {'arm64-v8a': ('arm64v8', 183), 'x86_64': ('amd64', 62)}
 NATIVE = {'libproot.so', 'libprootloader.so', 'libtalloc.so', 'libandroid-shmem.so'}
 
@@ -39,14 +39,49 @@ def write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
 
+def latest_official_release():
+    release = json.loads(subprocess.check_output(
+        ['gh', 'api', 'repos/' + OFFICIAL_REPOSITORY + '/releases/latest'], encoding='utf-8', timeout=60))
+    version = release['tag_name']
+    frontend = next((asset for asset in release['assets'] if asset['name'] == 'dist.zip'), None)
+    if frontend is None:
+        raise ValueError('Latest official release has no dist.zip frontend asset')
+    checksum = (frontend.get('digest') or '').removeprefix('sha256:')
+    if not re.fullmatch('[0-9a-f]{64}', checksum):
+        raise ValueError('Latest official frontend asset has no SHA-256 digest')
+    repository = OFFICIAL / 'repository.git'
+    if not repository.exists():
+        subprocess.run(['git', 'init', '--bare', str(repository)], check=True, timeout=30)
+    reference = 'refs/tags/' + version
+    subprocess.run(['git', '-C', str(repository), 'fetch', '--depth=1',
+                    'https://github.com/' + OFFICIAL_REPOSITORY + '.git', reference + ':' + reference],
+                   check=True, timeout=180)
+    commit = subprocess.check_output(
+        ['git', '-C', str(repository), 'rev-parse', '--verify', reference + '^{commit}'],
+        text=True, timeout=30).strip()
+    dist = OFFICIAL / 'artifacts' / str(frontend['id']) / 'dist.zip'
+    if not dist.is_file() or dist.stat().st_size != frontend['size'] or sha(dist) != checksum:
+        dist.parent.mkdir(parents=True, exist_ok=True)
+        temporary = dist.with_suffix('.part')
+        try:
+            with temporary.open('wb') as stream:
+                subprocess.run(['gh', 'api', 'repos/' + OFFICIAL_REPOSITORY + '/releases/assets/'
+                                + str(frontend['id']), '-H', 'Accept: application/octet-stream'],
+                               stdout=stream, check=True, timeout=300)
+            if temporary.stat().st_size != frontend['size'] or sha(temporary) != checksum:
+                raise ValueError('Official frontend release integrity mismatch')
+            temporary.replace(dist)
+        finally:
+            temporary.unlink(missing_ok=True)
+    return repository, version, commit, dist, checksum
+
+
 def original_seed():
-    actual = subprocess.check_output(['git', '-C', str(OFFICIAL), 'rev-parse', 'HEAD'], text=True).strip()
-    if actual != COMMIT:
-        raise ValueError('Official seed repository is not at the reviewed release commit')
+    official, version, commit, dist, dist_sha = latest_official_release()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     # Read Git blobs directly. Git archive can apply the Windows checkout's
     # autocrlf settings, which would change bytes in the upstream release.
-    tree = subprocess.check_output(['git', '-C', str(OFFICIAL), 'ls-tree', '-rz', COMMIT])
+    tree = subprocess.check_output(['git', '-C', str(official), 'ls-tree', '-rz', commit])
     objects = []
     for record in tree.split(b'\0'):
         if not record:
@@ -56,7 +91,7 @@ def original_seed():
         if kind != b'blob' or mode not in (b'100644', b'100755'):
             raise ValueError('Official seed contains an unsupported Git object')
         objects.append((mode, oid, path.decode('utf-8')))
-    batch = subprocess.run(['git', '-C', str(OFFICIAL), 'cat-file', '--batch'],
+    batch = subprocess.run(['git', '-C', str(official), 'cat-file', '--batch'],
                            input=b''.join(oid + b'\n' for _, oid, _ in objects),
                            stdout=subprocess.PIPE, check=True).stdout
     position = 0
@@ -77,9 +112,6 @@ def original_seed():
     wheel = RUNTIME / 'artifacts/pip' / pip['filename']
     if sha(wheel) != pip['sha256'] or wheel.stat().st_size != pip['size']:
         raise ValueError('Pip wheel integrity mismatch')
-    dist = ROOT / '.runtime/official-kira/artifacts/dist-v3.1.2.zip'
-    if sha(dist) != DIST_SHA or dist.stat().st_size != 2232346:
-        raise ValueError('Official frontend release integrity mismatch')
     with zipfile.ZipFile(dist) as frontend:
         icon_name = 'dist/icon.png' if 'dist/icon.png' in frontend.namelist() else 'icon.png'
         icon = OUTPUT / 'res/drawable/kira_icon.png'
@@ -104,12 +136,12 @@ def original_seed():
             entry.external_attr = 0o100644 << 16
             dst.writestr(entry, path.read_bytes())
     temporary.replace(seed)
-    write_json(OUTPUT / 'official-source-integrity.json', {'commit': COMMIT, 'version': 'v3.1.2', 'files': source_manifest})
-    return ({'version': 'v3.1.2', 'initial_commit': COMMIT,
+    write_json(OUTPUT / 'official-source-integrity.json', {'commit': commit, 'version': version, 'files': source_manifest})
+    return ({'version': version, 'initial_commit': commit,
              'remote_url': 'https://github.com/KiraAI-Dev/KiraAI',
              'seed_sha256': sha(seed), 'seed_size': seed.stat().st_size},
             {key: pip[key] for key in ('filename', 'sha256', 'size')} | {'version': pip['package_version']},
-            {'version': 'v3.1.2', 'sha256': DIST_SHA, 'size': dist.stat().st_size})
+            {'version': version, 'sha256': dist_sha, 'size': dist.stat().st_size})
 
 
 def prepare():
