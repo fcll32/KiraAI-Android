@@ -10,7 +10,7 @@ APK 在私有目录内提供 Debian + PRoot，运行官方 Kira、Linux QQ 和 N
 
 ## 版本、路径与持久化
 
-Kira 首装种子为 `v3.1.2`，提交 `89013745ba3281bdc248e704bbcb619417cf4f57`。构建从 Git 原始对象归档源码及 requirements，另捆绑官方 dist.zip；`verify_apk.py` 核对官方源码、面板、归档摘要和原生库。种子只用于首次部署，后续保留官方更新结果。
+Kira 首装种子在构建准备时从官方 GitHub `releases/latest` 解析，源码与 `dist.zip` 使用同一发行版。构建从对应 tag 的 Git 原始对象归档源码及 requirements，并根据 release 资产元数据校验面板大小与 SHA-256；实际版本、提交及摘要记录在构建清单中。`verify_apk.py` 核对官方源码、面板、归档摘要和原生库。种子只用于首次部署，后续保留官方更新结果。
 
 NapCat 首装基线为 `v4.9.43`，Linux QQ 为 `3.2.34-53644`，安装器固定到提交 `cbc0f10212a6a4d460b70861a5c8e2b6012119e5`。安装器、Shell 归档和对应架构 QQ 包均绑定准确大小与 SHA256。已有较新版本（包括旧来源的 `v4.18.42`）不因 APK 内置基线而自动降级。`NapNeko/NapCatQQ` 已不再提供发布资产，Shell 归档和更新检查自 2026-11-14 起改用 `xxynet/NapCatQQ`；原 `NapNeko/NapCat-Installer` 仓库同日已返回 404，固定安装器改从 `xiwangly2/NapCat-Installer` 的同一提交下载，大小与 SHA256 绑定不变，内容不一致即拒绝；该仓库是个人 fork，失效时需再次换源。[NapCat 基线发布](https://github.com/xxynet/NapCatQQ/releases/tag/v4.9.43)
 

@@ -107,7 +107,7 @@ class RuntimeEnvironmentTests(unittest.TestCase):
 
 
 class OfficialTelemetryEnvironmentTests(unittest.TestCase):
-    def test_official_pinned_client_exits_before_network_initialization(self):
+    def test_official_client_exits_before_network_initialization(self):
         """Execute official code with network constructors replaced by traps."""
         # Prepared runtime: KIRA_RUNTIME_BUILD, the build/runtime beside these tests (exists in the cache-root test copy), or the cache root.
         relative = Path('android-kira-host/build/runtime')
@@ -115,13 +115,16 @@ class OfficialTelemetryEnvironmentTests(unittest.TestCase):
         candidates = [Path(os.environ['KIRA_RUNTIME_BUILD'])] if os.environ.get('KIRA_RUNTIME_BUILD') else []
         candidates += [Path(__file__).resolve().parents[2] / relative, Path('D:/') / cache / relative, Path('/mnt/d') / cache / relative]
         build = next((path for path in candidates if (path / 'assets/official-kira-seed.zip').is_file()
-                      and (path / 'official-source-integrity.json').is_file()), None)
+                      and (path / 'official-source-integrity.json').is_file()
+                      and (path / 'assets/host-runtime.json').is_file()), None)
         if build is None:
-            self.skipTest('Pinned official Kira v3.1.2 prepared source is unavailable: set KIRA_RUNTIME_BUILD, or run from the cache-root test copy')
+            self.skipTest('Official Kira prepared source is unavailable: set KIRA_RUNTIME_BUILD, or run from the cache-root test copy')
         seed = build / 'assets/official-kira-seed.zip'
         integrity_path = build / 'official-source-integrity.json'
         integrity = json.loads(integrity_path.read_text(encoding='utf-8'))
-        self.assertEqual(integrity['commit'], '89013745ba3281bdc248e704bbcb619417cf4f57')
+        manifest = json.loads((build / 'assets/host-runtime.json').read_text(encoding='utf-8'))
+        self.assertEqual(integrity['commit'], manifest['officialRepository']['initial_commit'])
+        self.assertEqual(integrity['version'], manifest['officialRepository']['version'])
         item = next(item for item in integrity['files'] if item['path'] == 'core/telemetry/client.py')
         with zipfile.ZipFile(seed) as package:
             source = package.read('KiraAI/core/telemetry/client.py')
@@ -136,7 +139,7 @@ class OfficialTelemetryEnvironmentTests(unittest.TestCase):
         stubs = {
             'httpx': module('httpx', AsyncClient=network, AsyncHTTPTransport=network),
             'core': module('core'),
-            'core.config': module('core.config', VERSION='v3.1.2', KiraConfig=object),
+            'core.config': module('core.config', VERSION=integrity['version'], KiraConfig=object),
             'core.db': module('core.db'),
             'core.db.service': module('core.db.service', DatabaseService=object),
             'core.logging_manager': module('core.logging_manager', get_logger=lambda *args: logger),
